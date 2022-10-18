@@ -8,9 +8,9 @@ struct Counter
 
 	int count = 0;
 
-	void TestCount()
+	void AddOne()
 	{
-		if (count < 3)
+		if (++count < 3)
 			return;
 
 		_invoker.Raise(this, count);
@@ -20,19 +20,29 @@ private:
 	EventInvoker<int, Counter> _invoker;
 };
 
+void OnThree(Counter* counter, int i)
+{
+	std::cout << "whoopee three reached\n";
+	counter->count = 0;
+}
+
 int main(int, char*[])
 {
 	Counter counter;
-
+	
 	counter.CountReached += [](auto sender, auto e)
 	{
 		std::cout << "send by: " << typeid(*sender).name() << ", with: " << e << std::endl;
 	};
+	counter.CountReached += OnThree;
 
-	counter.TestCount();
-	counter.count += 7;
-	counter.TestCount();
+	counter.AddOne();
+	counter.AddOne();
+	counter.AddOne();
+	counter.AddOne();
+	counter.AddOne();
+	counter.AddOne();
 
-	system("pause");
+
 	return 0;
 }

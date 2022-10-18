@@ -47,7 +47,7 @@ public:
 	/// </summary>
 	struct Unsubscriber
 	{
-		void Unsubscribe() const {_observable.Unsubscribe(_observer);}
+		void Unsubscribe() const { _observable.Unsubscribe(_observer); }
 
 		Unsubscriber(Observer<Subject>& observer, Observable<Subject>& observable)
 			: _observer(observer), _observable(observable) {}

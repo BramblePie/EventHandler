@@ -21,10 +21,13 @@ private:
 	EventInvoker<int, Counter> _invoker;
 };
 
-void OnThree(Counter* counter, int i)
+void OnThree(Counter* counter, int i, void* voidState)
 {
+	int& state = *static_cast<int*>(voidState);
+
 	std::cout << "whoopee three reached\n";
-	counter->count = 0;
+	counter->count = state;
+	state = 0;
 }
 
 
@@ -66,16 +69,18 @@ public:
 int main(int, char*[])
 {
 	Counter counter;
-	counter.CountReached += [](auto sender, auto e)
+	counter.CountReached += [](auto sender, auto e, void*)
 	{
 		std::cout << "send by: " << typeid(*sender).name() << ", with: " << e << std::endl;
 	};
-	counter.CountReached += OnThree;
+	int state = 999;
+	//counter.CountReached += OnThree;
+	counter.CountReached.Add(OnThree, &state);
 	counter.AddOne();
 	counter.AddOne();
 	counter.AddOne();
 	counter.AddOne();
-	counter.CountReached -= OnThree;
+	counter.CountReached.Remove(OnThree, &state);
 	counter.AddOne();
 	counter.AddOne();
 	counter.AddOne();

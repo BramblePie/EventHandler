@@ -47,21 +47,24 @@ public:
 	/// </summary>
 	struct Unsubscriber
 	{
-		Observer<Subject>& observer;
-		Observable<Subject>& observable;
+		void Unsubscribe() const {_observable.Unsubscribe(_observer);}
 
 		Unsubscriber(Observer<Subject>& observer, Observable<Subject>& observable)
-			: observer(observer), observable(observable) {}
+			: _observer(observer), _observable(observable) {}
 
 		/// <summary>
 		/// Unsubscribe on destruction
 		/// </summary>
-		~Unsubscriber() { observable.Unsubscribe(observer); }
+		~Unsubscriber() { Unsubscribe(); }
 
 		Unsubscriber(const Unsubscriber&) = delete;
 		Unsubscriber(Unsubscriber&&) noexcept = default;
 		Unsubscriber& operator=(const Unsubscriber&) = delete;
 		Unsubscriber& operator=(Unsubscriber&&) noexcept = default;
+
+	private:
+		Observer<Subject>& _observer;
+		Observable<Subject>& _observable;
 	};
 
 	/// <summary>

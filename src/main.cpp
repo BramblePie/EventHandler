@@ -82,9 +82,10 @@ int main(int, char*[])
 
 	PersonMonitor monitor;
 	PersonReporter reporter("consumer #1");
-	Observable<Person>::Unsubscriber stop = monitor.Subscribe(reporter);
+	auto token = monitor.Subscribe(reporter);
 	monitor.SetPerson({ "barry allen", 31 });
-	monitor.Unsubscribe(reporter);
+	//monitor.Unsubscribe(reporter);
+	//token.Unsubscribe();
 	monitor.SetPerson({ "voldemort", 72 });
 
 	return 0;
